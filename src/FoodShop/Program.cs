@@ -1,4 +1,8 @@
 
+using FoodShop.Entities;
+using FoodShop.Services;
+using FoodShop.Services.Interfaces;
+
 namespace FoodShop
 {
     public class Program
@@ -10,8 +14,12 @@ namespace FoodShop
             // Add services to the container.
 
             builder.Services.AddControllers();
-            // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-            builder.Services.AddEndpointsApiExplorer();
+            builder.Services.AddDbContext<FoodShopDbContext>();
+            builder.Services.AddTransient<ICategoryCommandService, CategoryCommandService>();
+            builder.Services.AddTransient<ICategoryQueryService, CategoryQueryService>();
+            builder.Services.AddTransient<IProductCommandService, ProductCommandService>();
+            builder.Services.AddTransient<IProductQueryService, ProductQueryService>();
+            builder.Services.AddAutoMapper(typeof(Program));
             builder.Services.AddSwaggerGen();
 
             var app = builder.Build();
@@ -31,6 +39,7 @@ namespace FoodShop
             app.MapControllers();
 
             app.Run();
+
         }
     }
 }
