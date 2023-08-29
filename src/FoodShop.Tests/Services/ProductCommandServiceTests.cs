@@ -16,21 +16,86 @@ namespace FoodShop.Tests.Services
     {
         private Mock<FoodShopDbContext> dbContext = new FoodShopDbContextMock().DbContextMock;
 
+        private IMapper mapper()
+        {
+            var productProfile = new ProductMappingProfile();
+            productProfile._db = dbContext.Object;
+            var configuration = new MapperConfiguration(cfg => cfg.AddProfile(productProfile));
+            return new Mapper(configuration);
+        }
+
         [Fact]
         public void AddProduct_ForGivenNullProductToSave_ThrowArgumentNullException()
         {
             // arrange
 
-            var productProfile = new ProductMappingProfile();
-            productProfile._db = dbContext.Object;
-            var configuration = new MapperConfiguration(cfg => cfg.AddProfile(productProfile));
-            IMapper mapper = new Mapper(configuration);
-
-            var productCommandService = new ProductCommandService(dbContext.Object, mapper);
+            var productCommandService = new ProductCommandService(dbContext.Object, mapper());
 
             // Assert
 
             Assert.Throws<ArgumentNullException>(() => productCommandService.AddProduct(null));
+        }
+
+        [Theory]
+        [InlineData(13)]
+        [InlineData(16)]
+        [InlineData(19)]
+        [InlineData(21)]
+        public void UpdateProductPrice_ForGivenIdOutOfListRange_ThrowArgumentNullException(int id)
+        {
+            // arrange
+
+            var productCommandService = new ProductCommandService(dbContext.Object, mapper());
+
+            // Assert
+
+            Assert.Throws<ArgumentNullException>(() => productCommandService.UpdateProductPrice(id, 1.0));
+        }
+
+        [Theory]
+        [InlineData(0)]
+        [InlineData(-1)]
+        [InlineData(-3)]
+        [InlineData(-5)]
+        public void UpdateProductPrice_ForGivenPriceLessOrEqual0_ThrowArgumentException(double price)
+        {
+            // arrange
+
+            var productCommandService = new ProductCommandService(dbContext.Object, mapper());
+
+            // Assert
+
+            Assert.Throws<ArgumentException>(() => productCommandService.UpdateProductPrice(1, price));
+        }
+
+        [Theory]
+        [InlineData(13)]
+        [InlineData(16)]
+        [InlineData(19)]
+        [InlineData(21)]
+        public void UpdateProductDescription_ForGivenIdOutOfListRange_ThrowArgumentNullException(int id)
+        {
+            // arrange
+
+            var productCommandService = new ProductCommandService(dbContext.Object, mapper());
+
+            // Assert
+
+            Assert.Throws<ArgumentNullException>(() => productCommandService.UpdateProductDescription(id, "New Description"));
+        }
+
+        [Theory]
+        [InlineData(null)]
+        [InlineData("")]
+        public void UpdateProductDescription_ForGivenNullOrEmptyNewDescription_ThrowArgumentNullException(string newDescription)
+        {
+            // arrange
+
+            var productCommandService = new ProductCommandService(dbContext.Object, mapper());
+
+            // Assert
+
+            Assert.Throws<ArgumentNullException>(() => productCommandService.UpdateProductDescription(1, newDescription));
         }
     }
 }

@@ -18,16 +18,17 @@ namespace FoodShop.Services
             _mapper = mapper;
         }
 
-        public List<CategoryDto> GetCategories()
+        public List<CategoryDto> GetCategories(int sortedBy)
         {
-            var categories = _dbContext.Categories
-                .Include(c => c.Products)
-                .ToList();
-            var categoriesDto = _mapper.Map<List<CategoryDto>>(categories);
+            var sortTool = new FilterSortOperationTool();
+            var sorted = (Sorted)sortedBy;
+            var categories = _dbContext.Categories.ToList();
+            var categoriesSorted = sortTool.CategorySortBy(sorted, categories);
+            var categoriesDto = _mapper.Map<List<CategoryDto>>(categoriesSorted);
             return categoriesDto;
         }
 
-        public CategoryDto GetCategoryById(int id)
+        public SingleCategoryDto GetCategoryById(int id)
         {
             var category = _dbContext.Categories
                 .Include(c => c.Products)
@@ -39,7 +40,7 @@ namespace FoodShop.Services
             }
             else
             {
-                var categoryDto = _mapper.Map<CategoryDto>(category);
+                var categoryDto = _mapper.Map<SingleCategoryDto>(category);
                 return categoryDto;
             }
            

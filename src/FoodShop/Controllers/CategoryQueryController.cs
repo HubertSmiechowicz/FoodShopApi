@@ -14,14 +14,14 @@ namespace FoodShop.Controllers
             _service = service;
         }
 
-        [HttpGet]
-        public List<CategoryDto> GetCategories() 
+        [HttpGet("all/{sortedBy}")]
+        public List<CategoryDto> GetCategories([FromRoute] int sortedBy) 
         {
-            return _service.GetCategories();
+            return _service.GetCategories(sortedBy);
         }
 
         [HttpGet("{id}")]
-        public CategoryDto GetCategoryById([FromRoute] int id) 
+        public SingleCategoryDto GetCategoryById([FromRoute] int id) 
         {
             return _service.GetCategoryById(id);
         }

@@ -3,6 +3,7 @@ using FoodShop.Entities;
 using FoodShop.Services.Interfaces;
 using FoodShop.Entities.dtos;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
 
 namespace FoodShop.Services
 {
@@ -19,7 +20,7 @@ namespace FoodShop.Services
 
         public Product AddProduct(ProductDtoToSave productDtoToSave)
         {
-            if (productDtoToSave == null) { throw new ArgumentNullException(); }
+            if (productDtoToSave == null) { throw new ArgumentNullException("Product cannot be null"); }
             var productDto = new ProductDtoToSave()
             {
                 Name = productDtoToSave.Name,
@@ -29,6 +30,26 @@ namespace FoodShop.Services
             };
             var product = _mapper.Map<Product>(productDto);
             _dbContext.Products.Add(product);
+            _dbContext.SaveChanges();
+            return product;
+        }
+
+        public Product UpdateProductPrice(int id, double newPrice)
+        {
+            if (newPrice <= 0) { throw new ArgumentException("New price cannot be less or equal 0"); }
+            var product = _dbContext.Products.FirstOrDefault(p => p.Id == id);
+            if (product == null) { throw new ArgumentNullException("Product not found"); }
+            product.Price = newPrice;
+            _dbContext.SaveChanges();
+            return product;
+        }
+
+        public Product UpdateProductDescription(int id, string newDescription) 
+        {
+            if (newDescription.IsNullOrEmpty()) { throw new ArgumentNullException("New description cannot be null"); }
+            var product = _dbContext.Products.FirstOrDefault(p => p.Id == id);
+            if (product == null) { throw new ArgumentNullException("Product not found"); }
+            product.Description = newDescription;
             _dbContext.SaveChanges();
             return product;
         }

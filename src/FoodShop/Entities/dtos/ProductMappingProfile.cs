@@ -8,6 +8,7 @@ namespace FoodShop.Entities.dtos
 
         public ProductMappingProfile()
         {
+            CreateMap<Category, SingleCategoryDto>();
             CreateMap<Category, CategoryDto>();
             CreateMap<ProductDtoToSave, Product>(); 
             CreateMap<Product, ProductDtoToRead>()

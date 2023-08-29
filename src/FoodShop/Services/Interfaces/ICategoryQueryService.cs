@@ -5,7 +5,7 @@ namespace FoodShop.Services.Interfaces
 {
     public interface ICategoryQueryService
     {
-        List<CategoryDto> GetCategories();
-        CategoryDto GetCategoryById([FromQuery] int id);
+        List<CategoryDto> GetCategories(int sortedBy);
+        SingleCategoryDto GetCategoryById([FromQuery] int id);
     }
 }
