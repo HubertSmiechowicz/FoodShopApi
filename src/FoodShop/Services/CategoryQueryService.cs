@@ -4,6 +4,7 @@ using FoodShop.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using FoodShop.Entities.dtos;
+using FoodShop.Services.Tools;
 
 namespace FoodShop.Services
 {
@@ -18,12 +19,11 @@ namespace FoodShop.Services
             _mapper = mapper;
         }
 
-        public List<CategoryDto> GetCategories(int sortedBy)
+        public List<CategoryDto> GetCategories(Sorted sortedBy)
         {
-            var sortTool = new FilterSortOperationTool();
-            var sorted = (Sorted)sortedBy;
             var categories = _dbContext.Categories.ToList();
-            var categoriesSorted = sortTool.CategorySortBy(sorted, categories);
+            var sortTool = new FilterSortCategoryOperationTool(sortedBy);
+            var categoriesSorted = sortTool.CategorySortBy(categories);
             var categoriesDto = _mapper.Map<List<CategoryDto>>(categoriesSorted);
             return categoriesDto;
         }
@@ -34,16 +34,9 @@ namespace FoodShop.Services
                 .Include(c => c.Products)
                 .FirstOrDefault(c => c.Id == id);
 
-            if (category == null)
-            {
-                throw new EntryPointNotFoundException();
-            }
-            else
-            {
-                var categoryDto = _mapper.Map<SingleCategoryDto>(category);
-                return categoryDto;
-            }
-           
+            if (category == null) { throw new EntryPointNotFoundException(); }
+            var categoryDto = _mapper.Map<SingleCategoryDto>(category);
+            return categoryDto;
         }
     }
 }

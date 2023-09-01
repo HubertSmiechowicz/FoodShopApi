@@ -1,7 +1,8 @@
 ﻿using FoodShop.Services.Interfaces;
-using FoodShop.Entities;
-using Microsoft.AspNetCore.Mvc;
 using FoodShop.Entities.dtos;
+using Microsoft.AspNetCore.Mvc;
+using FoodShop.Entities;
+using FoodShop.Services.Tools;
 
 namespace FoodShop.Controllers
 {
@@ -16,7 +17,7 @@ namespace FoodShop.Controllers
         }
 
         [HttpGet("all/{sortedBy}")]
-        public List<ProductDtoToRead> GetAllProducts([FromRoute] int sortedBy)
+        public List<ProductDtoToRead> GetAllProducts([FromRoute] Sorted sortedBy)
         {
             return _queryService.GetAllProducts(sortedBy);
         }
@@ -27,14 +28,20 @@ namespace FoodShop.Controllers
             return _queryService.GetProductById(id);
         }
 
-        [HttpGet("category/{categoryId}/ {sortedBy}")]
-        public List<ProductDtoToRead> GetProductsByCategoryId([FromRoute] int categoryId, [FromRoute] int sortedBy) 
+        [HttpGet("name/{nameFragment}/{sortedBy}")]
+        public List<ProductDtoToRead> GetProductsByNameFragmentContains([FromRoute] string nameFragment, [FromRoute] Sorted sortedBy)
+        {
+            return _queryService.GetProductsByNameFragmentContains(nameFragment, sortedBy);
+        }
+
+        [HttpGet("category/{categoryId}/{sortedBy}")]
+        public List<ProductDtoToRead> GetProductsByCategoryId([FromRoute] int categoryId, [FromRoute] Sorted sortedBy) 
         {
             return _queryService.GetProductsByCategoryId(categoryId, sortedBy);
         }
 
         [HttpGet("price/{priceDownLimit}/{priceUpLimit}/{sortedBy}")]
-        public List<ProductDtoToRead> GetProductByPriceRange([FromRoute] double priceDownLimit, [FromRoute] double priceUpLimit, [FromRoute] int sortedBy)
+        public List<ProductDtoToRead> GetProductByPriceRange([FromRoute] double priceDownLimit, [FromRoute] double priceUpLimit, [FromRoute] Sorted sortedBy)
         {
             return _queryService.GetProductByPriceRange(priceDownLimit, priceUpLimit, sortedBy);
         }

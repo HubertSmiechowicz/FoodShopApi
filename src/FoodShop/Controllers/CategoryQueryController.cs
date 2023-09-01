@@ -1,6 +1,7 @@
 ﻿using FoodShop.Entities.dtos;
 using FoodShop.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using FoodShop.Services.Tools;
 
 namespace FoodShop.Controllers
 {
@@ -15,7 +16,7 @@ namespace FoodShop.Controllers
         }
 
         [HttpGet("all/{sortedBy}")]
-        public List<CategoryDto> GetCategories([FromRoute] int sortedBy) 
+        public List<CategoryDto> GetCategories([FromRoute] Sorted sortedBy) 
         {
             return _service.GetCategories(sortedBy);
         }

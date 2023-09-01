@@ -11,6 +11,9 @@ namespace FoodShop.Entities
             "TrustServerCertificate=True; ";
         public virtual DbSet<Product> Products { get; set; }
         public virtual DbSet<Category> Categories { get; set; }
+        public virtual DbSet<Order> Orders { get; set; }
+        public virtual DbSet<Customer > Customers { get; set; }
+        public virtual DbSet<OrderProduct> OrderProducts { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -21,6 +24,30 @@ namespace FoodShop.Entities
 
             modelBuilder.Entity<Category>()
                 .Property(r => r.Name)
+                .IsRequired();
+
+            modelBuilder.Entity<Order>()
+                .Property(r => r.OrderStatus)
+                .IsRequired()
+                .HasConversion<int>();
+
+            modelBuilder.Entity<Customer>()
+                .Property(r => r.Phone)
+                .IsRequired()
+                .HasMaxLength(12);
+
+            modelBuilder.Entity<OrderProduct>()
+                .HasOne(r => r.Product)
+                .WithMany(r => r.OrderProducts)
+                .HasForeignKey(r => r.ProductId);
+
+            modelBuilder.Entity<OrderProduct>()
+                .HasOne(r => r.Order)
+                .WithMany(r => r.OrderProducts)
+                .HasForeignKey(r => r.OrderId);
+
+            modelBuilder.Entity<OrderProduct>()
+                .Property(r => r.ProductQuantity)
                 .IsRequired();
         }
 

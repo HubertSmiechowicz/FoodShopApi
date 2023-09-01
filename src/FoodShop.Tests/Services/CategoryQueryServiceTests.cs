@@ -10,6 +10,7 @@ using Microsoft.EntityFrameworkCore;
 using FoodShop.Services;
 using AutoMapper;
 using FoodShop.Entities.dtos;
+using FoodShop.Services.Tools;
 
 namespace FoodShop.Tests.Services
 {
@@ -33,7 +34,7 @@ namespace FoodShop.Tests.Services
 
             // act
 
-            var categoriesLength = categoryQueryService.GetCategories().Count;
+            var categoriesLength = categoryQueryService.GetCategories(Sorted.ASCENDING_ID).Count;
 
             // assert
 

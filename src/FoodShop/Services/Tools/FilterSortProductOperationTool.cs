@@ -1,36 +1,17 @@
 ﻿using FoodShop.Entities;
 
-namespace FoodShop.Services
+namespace FoodShop.Services.Tools
 {
-    public class FilterSortOperationTool
-    {
+    public class FilterSortProductOperationTool
+    { 
+        public Sorted sortBy { get; set; }
 
-        public List<Category> CategorySortBy(Sorted sortBy, List<Category> listToSort)
+        public FilterSortProductOperationTool(Sorted sortBy)
         {
-            switch (sortBy)
-            {
-                case Sorted.NONE:
-                    return listToSort;
-
-                case Sorted.ASCENDING_ID:
-                    return listToSort.OrderBy(s => s.Id).ToList();
-
-                case Sorted.DESCENDING_ID:
-                    return listToSort.OrderByDescending(s => s.Id).ToList();
-
-                case Sorted.ASCENDING_NAME:
-                    return listToSort.OrderBy(s => s.Name).ToList();
-
-                case Sorted.DESCENDING_NAME:
-                    return listToSort.OrderByDescending(s => s.Name).ToList();
-
-                default:
-                    return listToSort;
-
-            }
+            this.sortBy = sortBy;
         }
 
-        public List<Product> ProductSortBy(Sorted sortBy, List<Product> listToSort)
+        public List<Product> ProductSortBy(List<Product> listToSort)
         {
             switch (sortBy)
             {
@@ -60,5 +41,7 @@ namespace FoodShop.Services
 
             }
         }
+
+
     }
 }

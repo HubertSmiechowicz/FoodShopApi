@@ -2,6 +2,7 @@
 using FoodShop.Entities;
 using FoodShop.Entities.dtos;
 using FoodShop.Services.Interfaces;
+using FoodShop.Services.Tools;
 
 namespace FoodShop.Services
 {
@@ -16,12 +17,11 @@ namespace FoodShop.Services
             _mapper = mapper;
         }
 
-        public List<ProductDtoToRead> GetAllProducts(int sortedBy)
+        public List<ProductDtoToRead> GetAllProducts(Sorted sortedBy)
         {
             var products = _dbContext.Products.ToList();
-            var sortTool = new FilterSortOperationTool();
-            var sort = (Sorted)sortedBy;
-            var sortedProducts = sortTool.ProductSortBy(sort, products);
+            var sortTool = new FilterSortProductOperationTool(sortedBy);
+            var sortedProducts = sortTool.ProductSortBy(products);
             var productsDto = _mapper.Map<List<ProductDtoToRead>>(sortedProducts);
             return productsDto;
         }
@@ -34,22 +34,29 @@ namespace FoodShop.Services
             return productDto;
         }
 
-        public List<ProductDtoToRead> GetProductsByCategoryId(int categoryId, int sortedBy) 
+        public List<ProductDtoToRead> GetProductsByNameFragmentContains(string nameFragment, Sorted sortedBy)
         {
-            var products = _dbContext.Products.Where(p => p.CategoryId == categoryId).ToList();
-            var sortTool = new FilterSortOperationTool();
-            var sort = (Sorted)sortedBy;
-            var sortedProducts = sortTool.ProductSortBy(sort, products);
+            var products = _dbContext.Products.Where(p => p.Name.Contains(nameFragment)).ToList();
+            var sortTool = new FilterSortProductOperationTool(sortedBy);
+            var sortedProducts = sortTool.ProductSortBy(products);
             var productsDto = _mapper.Map<List<ProductDtoToRead>>(sortedProducts);
             return productsDto;
         }
 
-        public List<ProductDtoToRead> GetProductByPriceRange(double priceDownLimit, double priceUpLimit, int sortedBy)
+        public List<ProductDtoToRead> GetProductsByCategoryId(int categoryId, Sorted sortedBy) 
+        {
+            var products = _dbContext.Products.Where(p => p.CategoryId == categoryId).ToList();
+            var sortTool = new FilterSortProductOperationTool(sortedBy);
+            var sortedProducts = sortTool.ProductSortBy(products);
+            var productsDto = _mapper.Map<List<ProductDtoToRead>>(sortedProducts);
+            return productsDto;
+        }
+
+        public List<ProductDtoToRead> GetProductByPriceRange(double priceDownLimit, double priceUpLimit, Sorted sortedBy)
         {
             var product = _dbContext.Products.Where(p => p.Price > priceDownLimit && p.Price < priceUpLimit).ToList();
-            var sortTool = new FilterSortOperationTool();
-            var sort = (Sorted)sortedBy;
-            var sortedProducts = sortTool.ProductSortBy(sort, product);
+            var sortTool = new FilterSortProductOperationTool(sortedBy);
+            var sortedProducts = sortTool.ProductSortBy(product);
             var productsDto = _mapper.Map<List<ProductDtoToRead>>(sortedProducts);
             return productsDto;
         }

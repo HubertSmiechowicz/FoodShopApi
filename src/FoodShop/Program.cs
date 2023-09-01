@@ -19,6 +19,9 @@ namespace FoodShop
             builder.Services.AddTransient<ICategoryQueryService, CategoryQueryService>();
             builder.Services.AddTransient<IProductCommandService, ProductCommandService>();
             builder.Services.AddTransient<IProductQueryService, ProductQueryService>();
+            builder.Services.AddTransient<ICustomerCommandService, CustomerCommandService>();
+            builder.Services.AddTransient<IOrderCommandService, OrderCommandService>();
+            builder.Services.AddTransient<IOrderQueryService, OrderQueryService>();
             builder.Services.AddAutoMapper(typeof(Program));
             builder.Services.AddSwaggerGen();
 

@@ -2,6 +2,7 @@
 using FoodShop.Entities;
 using FoodShop.Entities.dtos;
 using FoodShop.Services;
+using FoodShop.Services.Tools;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Moq;
 using System;
@@ -29,7 +30,7 @@ namespace FoodShop.Tests.Services
 
             // act
 
-            var productsLength = productsQueryService.GetAllProducts().Count;
+            var productsLength = productsQueryService.GetAllProducts(Sorted.ASCENDING_ID).Count;
 
             // assert
 
@@ -54,7 +55,7 @@ namespace FoodShop.Tests.Services
 
             // act
 
-            var categoryNameResult = productsQueryService.GetAllProducts()[listPosition].CategoryName;
+            var categoryNameResult = productsQueryService.GetAllProducts(Sorted.ASCENDING_ID)[listPosition].CategoryName;
 
             // assert
 
