@@ -6,5 +6,7 @@ namespace FoodShop.Services.Interfaces
     {
         void AddProductToOrder(int orderId, int productId, int productQuantity);
         void CreateOrder(int customerId);
+
+        void PlacedOrder(int orderId);
     }
 }

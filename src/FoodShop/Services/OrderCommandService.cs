@@ -48,5 +48,29 @@ namespace FoodShop.Services
             _dbContext.OrderProducts.Add(orderProduct);
             _dbContext.SaveChanges();
         }
+
+        public void PlacedOrder(int orderId)
+        {
+            MailService mailService = new MailService(_dbContext);
+            var order = _dbContext.Orders.FirstOrDefault(o => o.Id == orderId);
+            if (order == null) { throw new EntityNotFoundException("Order not found. Id: " + orderId, orderId); }
+            if (order.OrderStatus != OrderStatus.ORDER_CREATED && order.OrderStatus != OrderStatus.ORDER_PLACED || order.OrderStatus == OrderStatus.ORDER_PLACED) { throw new OrderIsAlreadyPlacedException($"Order id {orderId} is already placed", orderId); }
+            order.OrderStatus = OrderStatus.ORDER_PLACED;
+            _dbContext.SaveChanges();
+            var customer = _dbContext.Customers.FirstOrDefault(c => c.Id == order.CustomerId);
+            if (customer == null) { throw new EntityNotFoundException("Customer not found. Id: " + order.CustomerId, order.CustomerId); }
+            mailService.SentEmailOrderPlaced
+                (
+                orderId, 
+                customer.Email, 
+                "Status zamówienia", 
+                $"Dziękujemy za złożenie zamówienia o numerze: {order.Id}. O dalszym przebiegu zamówienia będziemy informować mailowo."
+                );
+        }
+
+        public void ChangeOrderStatus(int orderId, OrderStatus status)
+        {
+
+        }
     }
 }

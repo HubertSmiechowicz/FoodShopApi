@@ -25,5 +25,11 @@ namespace FoodShop.Controllers
         {
             _orderCommandService.AddProductToOrder(orderId, productId, productQuantity);
         }
+
+        [HttpPatch("status/{orderId}")]
+        public void PlacedOrder(int orderId)
+        {
+            _orderCommandService.PlacedOrder(orderId);
+        }
     }
 }
