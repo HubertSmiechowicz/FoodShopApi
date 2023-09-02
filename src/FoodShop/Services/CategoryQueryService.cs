@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using FoodShop.Entities.dtos;
 using FoodShop.Services.Tools;
+using FoodShop.Exceptions;
 
 namespace FoodShop.Services
 {
@@ -34,7 +35,7 @@ namespace FoodShop.Services
                 .Include(c => c.Products)
                 .FirstOrDefault(c => c.Id == id);
 
-            if (category == null) { throw new EntryPointNotFoundException(); }
+            if (category == null) { throw new EntityNotFoundException("Category not found. Id: " + id, id); }
             var categoryDto = _mapper.Map<SingleCategoryDto>(category);
             return categoryDto;
         }

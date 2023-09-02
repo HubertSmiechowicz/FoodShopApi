@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using FoodShop.Entities;
 using FoodShop.Entities.dtos;
+using FoodShop.Exceptions;
 using FoodShop.Services.Interfaces;
 
 namespace FoodShop.Services
@@ -19,7 +20,7 @@ namespace FoodShop.Services
 
         public void CreateOrder(int customerId)
         {
-            if (_dbContext.Customers.FirstOrDefault(c => c.Id == customerId) == null) { throw new ArgumentNullException(); }
+            if (_dbContext.Customers.FirstOrDefault(c => c.Id == customerId) == null) { throw new EntityNotFoundException("Customer not found. Id: " + customerId, customerId); }
             Order order = new Order()
             {
                 CustomerId = customerId,
@@ -35,9 +36,9 @@ namespace FoodShop.Services
         public void AddProductToOrder(int orderId, int productId, int productQuantity)
         {
             var product = _dbContext.Products.FirstOrDefault(p => p.Id == productId);
-            if (product == null) { throw new ArgumentNullException(); }
+            if (product == null) { throw new EntityNotFoundException("Product not found. Id: " + productId, productId); }
             var order = _dbContext.Orders.FirstOrDefault(o => o.Id == orderId);
-            if (order == null) { throw new ArgumentNullException(); }
+            if (order == null) { throw new EntityNotFoundException("Product not found. Id: " + orderId, orderId); }
             var orderProduct = new OrderProduct();
             orderProduct.ProductId = productId;
             orderProduct.OrderId = orderId;

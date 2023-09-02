@@ -1,5 +1,6 @@
 ﻿using Castle.Components.DictionaryAdapter.Xml;
 using FoodShop.Entities;
+using FoodShop.Exceptions;
 using FoodShop.Services;
 using Microsoft.EntityFrameworkCore;
 using Moq;
@@ -52,7 +53,7 @@ namespace FoodShop.Tests.Services
         [InlineData(13)]
         [InlineData(15)]
         [InlineData(17)]
-        public void DeleteCategoryById_ForGivenIdsOutOfRange_ThrowArgumentNullException(int id)
+        public void DeleteCategoryById_ForGivenIdsOutOfRange_ThrowEntityNotFoundException(int id)
         {
             // arrange
 
@@ -60,14 +61,14 @@ namespace FoodShop.Tests.Services
 
             // assert
 
-            Assert.Throws<ArgumentNullException>(() => categoryCommandService.DeleteCategoryById(id));  
+            Assert.Throws<EntityNotFoundException>(() => categoryCommandService.DeleteCategoryById(id));  
         }
 
         [Theory]
         [InlineData(13)]
         [InlineData(15)]
         [InlineData(17)]
-        public void UpdateCategory_ForGivenIdsOutOfRange_ThrowArgumentNullException(int id)
+        public void UpdateCategory_ForGivenIdsOutOfRange_ThrowEntityNotFoundException(int id)
         {
             // arrange
 
@@ -75,7 +76,7 @@ namespace FoodShop.Tests.Services
 
             // assert
 
-            Assert.Throws<ArgumentNullException>(() => categoryCommandService.UpdateCategory(id, "Category x"));
+            Assert.Throws<EntityNotFoundException>(() => categoryCommandService.UpdateCategory(id, "Category x"));
         }
 
         [Theory]

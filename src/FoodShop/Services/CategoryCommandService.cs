@@ -1,6 +1,8 @@
 ﻿using FoodShop.Entities;
+using FoodShop.Exceptions;
 using FoodShop.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 
 namespace FoodShop.Services
 {
@@ -15,7 +17,7 @@ namespace FoodShop.Services
 
         public Category AddCategory(string name)
         {
-            if (string .IsNullOrEmpty(name)) { throw new ArgumentNullException("name"); }
+            if (string .IsNullOrEmpty(name)) { throw new ArgumentNullException("Name cannot be null or empty"); }
             var category = new Category()
             {
                 Name = name,
@@ -29,27 +31,19 @@ namespace FoodShop.Services
         public void DeleteCategoryById(int id)
         {
             var category = _dbContext.Categories.FirstOrDefault(c => c.Id == id);
-            if (category != null)
-            {
-                _dbContext.Remove(category);
-                _dbContext.SaveChanges();
-            }
-            else { throw new ArgumentNullException(); }
+            if (category == null) { throw new EntityNotFoundException("Category not found. Id: " + id, id); }
+            _dbContext.Remove(category);
+            _dbContext.SaveChanges();
         }
 
         public Category UpdateCategory(int id, string name)
         {
             var category = _dbContext.Categories.FirstOrDefault(c => c.Id == id);
-            if (category != null)
-            {
-                category.Name = name;
-                _dbContext.SaveChanges();
-                return category;
-            }
-            else
-            {
-                throw new ArgumentNullException();
-            }
+            if (category == null) { throw new EntityNotFoundException("Category not found. Id: " + id, id); }
+            if (name.IsNullOrEmpty()) { throw new ArgumentNullException("Name cannot be null or empty"); }
+            category.Name = name;
+            _dbContext.SaveChanges();
+            return category;
         }
     }
 }

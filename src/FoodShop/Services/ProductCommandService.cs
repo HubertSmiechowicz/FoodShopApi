@@ -4,6 +4,7 @@ using FoodShop.Services.Interfaces;
 using FoodShop.Entities.dtos;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
+using FoodShop.Exceptions;
 
 namespace FoodShop.Services
 {
@@ -38,7 +39,7 @@ namespace FoodShop.Services
         {
             if (newPrice <= 0) { throw new ArgumentException("New price cannot be less or equal 0"); }
             var product = _dbContext.Products.FirstOrDefault(p => p.Id == id);
-            if (product == null) { throw new ArgumentNullException("Product not found"); }
+            if (product == null) { throw new EntityNotFoundException("Product not found. Id:" + id, id); }
             product.Price = newPrice;
             _dbContext.SaveChanges();
             return product;
@@ -46,9 +47,9 @@ namespace FoodShop.Services
 
         public Product UpdateProductDescription(int id, string newDescription) 
         {
-            if (newDescription.IsNullOrEmpty()) { throw new ArgumentNullException("New description cannot be null"); }
+            if (newDescription.IsNullOrEmpty()) { throw new ArgumentNullException("New description cannot be null or empty"); }
             var product = _dbContext.Products.FirstOrDefault(p => p.Id == id);
-            if (product == null) { throw new ArgumentNullException("Product not found"); }
+            if (product == null) { throw new EntityNotFoundException("Product not found. Id: " + id, id); }
             product.Description = newDescription;
             _dbContext.SaveChanges();
             return product;

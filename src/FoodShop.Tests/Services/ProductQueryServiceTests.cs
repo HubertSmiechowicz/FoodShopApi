@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using FoodShop.Entities;
 using FoodShop.Entities.dtos;
+using FoodShop.Exceptions;
 using FoodShop.Services;
 using FoodShop.Services.Tools;
 using Microsoft.EntityFrameworkCore.Infrastructure;
@@ -60,6 +61,27 @@ namespace FoodShop.Tests.Services
             // assert
 
             Assert.Equal(categoryName, categoryNameResult);
+        }
+
+        [Theory]
+        [InlineData(13)]
+        [InlineData(16)]
+        [InlineData(18)]
+        [InlineData(23)]
+        public void GetProductById_ForGivenIdOutOfListRange_ThrowEntityNullException(int id)
+        {
+            // arrange
+
+            var productProfile = new ProductMappingProfile();
+            productProfile._db = dbContext.Object;
+            var configuration = new MapperConfiguration(cfg => cfg.AddProfile(productProfile));
+            IMapper mapper = new Mapper(configuration);
+
+            var productsQueryService = new ProductQueryService(dbContext.Object, mapper);
+
+            // assert
+
+            Assert.Throws<EntityNotFoundException>(() => productsQueryService.GetProductById(id));
         }
     }
 }

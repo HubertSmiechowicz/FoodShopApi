@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using FoodShop.Entities;
 using FoodShop.Entities.dtos;
+using FoodShop.Exceptions;
 using FoodShop.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
@@ -23,7 +24,7 @@ namespace FoodShop.Services
                 .Include(o => o.OrderProducts)
                 .FirstOrDefault(o => o.Id == id);
 
-            if (order == null) { throw new ArgumentNullException(); }
+            if (order == null) { throw new EntityNotFoundException("Order not found. Id: " + id, id); }
             var orderDto = _mapper.Map<OrderDtoToRead>(order);
             return orderDto;
         }

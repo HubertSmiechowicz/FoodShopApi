@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using FoodShop.Entities;
 using FoodShop.Entities.dtos;
+using FoodShop.Exceptions;
 using FoodShop.Services.Interfaces;
 using FoodShop.Services.Tools;
 
@@ -29,7 +30,7 @@ namespace FoodShop.Services
         public ProductDtoToRead GetProductById(int id) 
         {
             var product = _dbContext.Products.FirstOrDefault(p => p.Id == id);
-            if (product == null) { throw new ArgumentNullException("Product not found"); }
+            if (product == null) { throw new EntityNotFoundException("Product not found. Id: " + id, id); }
             var productDto = _mapper.Map<ProductDtoToRead>(product);
             return productDto;
         }
@@ -45,6 +46,7 @@ namespace FoodShop.Services
 
         public List<ProductDtoToRead> GetProductsByCategoryId(int categoryId, Sorted sortedBy) 
         {
+            if (_dbContext.Categories.FirstOrDefault(c => c.Id == categoryId) == null) { throw new EntityNotFoundException("Category not found. Id:" + categoryId, categoryId); }
             var products = _dbContext.Products.Where(p => p.CategoryId == categoryId).ToList();
             var sortTool = new FilterSortProductOperationTool(sortedBy);
             var sortedProducts = sortTool.ProductSortBy(products);

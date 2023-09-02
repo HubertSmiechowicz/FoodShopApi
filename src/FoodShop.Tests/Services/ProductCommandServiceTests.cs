@@ -9,6 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
 using FoodShop.Entities.dtos;
+using FoodShop.Exceptions;
 
 namespace FoodShop.Tests.Services
 {
@@ -41,7 +42,7 @@ namespace FoodShop.Tests.Services
         [InlineData(16)]
         [InlineData(19)]
         [InlineData(21)]
-        public void UpdateProductPrice_ForGivenIdOutOfListRange_ThrowArgumentNullException(int id)
+        public void UpdateProductPrice_ForGivenIdOutOfListRange_ThrowEntityNotFoundException(int id)
         {
             // arrange
 
@@ -49,7 +50,7 @@ namespace FoodShop.Tests.Services
 
             // Assert
 
-            Assert.Throws<ArgumentNullException>(() => productCommandService.UpdateProductPrice(id, 1.0));
+            Assert.Throws<EntityNotFoundException>(() => productCommandService.UpdateProductPrice(id, 1.0));
         }
 
         [Theory]
@@ -73,7 +74,7 @@ namespace FoodShop.Tests.Services
         [InlineData(16)]
         [InlineData(19)]
         [InlineData(21)]
-        public void UpdateProductDescription_ForGivenIdOutOfListRange_ThrowArgumentNullException(int id)
+        public void UpdateProductDescription_ForGivenIdOutOfListRange_ThrowEntityNotFoundException(int id)
         {
             // arrange
 
@@ -81,7 +82,7 @@ namespace FoodShop.Tests.Services
 
             // Assert
 
-            Assert.Throws<ArgumentNullException>(() => productCommandService.UpdateProductDescription(id, "New Description"));
+            Assert.Throws<EntityNotFoundException>(() => productCommandService.UpdateProductDescription(id, "New Description"));
         }
 
         [Theory]
